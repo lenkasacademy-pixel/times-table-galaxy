@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>The King's Thali Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#e2b95a;--gold2:#f6d892;--ivory:#fbf3e2;--ink:#1a0d14;--glass:rgba(32,12,22,.78);--line:rgba(226,185,90,.38);--maroon:#7a1f2b;--ok:#5fbf7a;--bad:#ff7a5a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#12080e;color:var(--ivory);font-family:'DM Sans','Segoe UI',sans-serif}
+body{background:radial-gradient(1200px 700px at 30% 0%,#3a1424 0%,#1a0a12 55%,#0e060a 100%) fixed}
+button{font-family:inherit;cursor:pointer}
+.serif{font-family:Cinzel,serif}
+/* top bar */
+#top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:12px 22px;background:rgba(18,8,14,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+#top .brand small{display:block;font-size:10.5px;letter-spacing:.3em;color:var(--gold2);font-weight:800}
+#top .brand b{font-family:Cinzel,serif;font-size:20px}
+#top .sp{flex:1}
+.pill{display:flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.04);font-size:13.5px;font-weight:700;white-space:nowrap}
+.pill i{font-style:normal;color:#cdbba0;font-weight:600;font-size:12px;letter-spacing:.06em}
+.coin{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff2b0,#e2b95a 60%,#9a6a0c);color:#3a2408;font-size:11px;font-weight:800}
+#titleBadge{background:linear-gradient(90deg,#7a1f2b,#a8323c);border-color:var(--gold)}
+/* layout */
+#app{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(380px,.85fr);gap:22px;padding:22px;max-width:1500px;margin:0 auto}
+.panel{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+#stage{padding:18px;position:sticky;top:78px;align-self:start}
+#stage .hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+#stage .hd h2{font-family:Cinzel,serif;font-size:24px}
+#stage .hd span{font-size:12px;letter-spacing:.22em;color:var(--gold2);font-weight:800}
+#cv{width:100%;aspect-ratio:1/1;display:block;border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+/* rule checker */
+#rule{margin-top:14px;padding:14px 16px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid var(--line)}
+#rule .rh{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.2em;font-weight:800;color:var(--gold2)}
+#rule .rh b{margin-left:auto;font-family:Cinzel,serif;letter-spacing:.06em;color:var(--ivory);font-size:15px}
+#bar{display:flex;height:30px;border-radius:10px;overflow:hidden;margin-top:10px;background:rgba(255,255,255,.06);position:relative}
+#bar div{height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#1a0d14;transition:width .45s cubic-bezier(.2,.9,.2,1);white-space:nowrap;overflow:hidden}
+#bar .tick{position:absolute;top:-4px;bottom:-4px;width:2px;background:rgba(255,255,255,.55)}
+#rows{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.rw{padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.rw .n{font-size:11px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.rw .n i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.rw .g{font-size:20px;font-weight:800;margin-top:3px}
+.rw .g small{font-size:12px;color:#cdbba0;font-weight:600}
+.rw .s{font-size:12px;margin-top:2px;font-weight:700}
+.rw.ok{border-color:rgba(95,191,122,.6);background:rgba(95,191,122,.1)}.rw.ok .s{color:var(--ok)}
+.rw.bad .s{color:#ffb08a}
+#ratioLine{margin-top:10px;font-size:14px;line-height:1.5;color:#f1e6cf}
+#ratioLine b{color:var(--gold2)}
+/* tabs */
+#side{padding:0;display:flex;flex-direction:column;min-height:calc(100vh - 120px)}
+#tabs{display:flex;gap:4px;padding:10px;border-bottom:1px solid var(--line)}
+#tabs button{flex:1;border:0;background:transparent;color:#cdbba0;padding:10px 6px;border-radius:12px;font-weight:700;font-size:13px;letter-spacing:.02em;display:flex;flex-direction:column;align-items:center;gap:2px}
+#tabs button b{font-family:Cinzel,serif;font-size:15px;color:var(--gold)}
+#tabs button.on{background:linear-gradient(180deg,rgba(226,185,90,.22),rgba(226,185,90,.06));color:var(--ivory);box-shadow:inset 0 0 0 1px var(--line)}
+.tab{display:none;padding:18px 20px 26px;overflow:auto}
+.tab.on{display:block}
+.tab h3{font-family:Cinzel,serif;font-size:21px}
+.tab .sub{font-size:13.5px;color:#d8c8a8;margin-top:4px;line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
+.opt{position:relative;padding:10px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);text-align:left;color:var(--ivory);transition:.15s;display:flex;flex-direction:column;gap:6px}
+.opt:hover{border-color:var(--line);transform:translateY(-1px)}
+.opt canvas{width:100%;aspect-ratio:1/1;border-radius:12px;background:#2a1520}
+.opt .nm{font-weight:700;font-size:14px;line-height:1.2}
+.opt .pr{font-size:12.5px;font-weight:700;color:var(--gold2)}
+.opt .pr.free{color:#9fdcae}
+.opt.on{border-color:var(--gold);background:linear-gradient(180deg,rgba(226,185,90,.18),rgba(226,185,90,.04));box-shadow:0 0 0 2px rgba(226,185,90,.25)}
+.opt.on:after{content:'✓';position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#1a0d14;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.opt.locked{opacity:.5}
+.opt .need{font-size:11px;color:#ffb08a;font-weight:700}
+/* sections */
+.sec{margin-top:16px;border:1px solid rgba(255,255,255,.1);border-radius:18px;overflow:hidden;background:rgba(0,0,0,.18)}
+.sec .sh{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sec .sh i{width:14px;height:14px;border-radius:4px}
+.sec .sh b{font-family:Cinzel,serif;font-size:16px}
+.sec .sh span{margin-left:auto;font-size:13px;font-weight:800;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.08)}
+.sec .sh span.ok{background:rgba(95,191,122,.22);color:#a8f0bb}
+.sec .sh span.over{background:rgba(255,122,90,.22);color:#ffc0a8}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px}
+.dish{padding:8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:5px;position:relative}
+.dish.has{border-color:var(--gold);background:rgba(226,185,90,.1)}
+.dish canvas{width:100%;aspect-ratio:1/1;border-radius:10px}
+.dish .nm{font-weight:700;font-size:13.5px;line-height:1.15}
+.dish .u{font-size:11.5px;color:#cdbba0}
+.dish .today{position:absolute;top:6px;left:6px;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 7px;border-radius:10px;background:linear-gradient(90deg,#c99a3a,#f4d48a);color:#2a1408}
+.step{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:2px}
+.step button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--ivory);font-size:19px;font-weight:700;line-height:1}
+.step button:hover{background:rgba(226,185,90,.25)}
+.step .q{font-weight:800;font-size:15px;text-align:center;flex:1}
+.step .q small{display:block;font-size:11px;color:#cdbba0;font-weight:600}
+.acc{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
+.chip{padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--ivory);font-weight:700;font-size:13px}
+.chip.on{background:var(--gold);color:#1a0d14;border-color:var(--gold)}
+.hint{margin-top:12px;padding:11px 14px;border-radius:14px;background:rgba(122,31,43,.35);border:1px solid rgba(226,185,90,.3);font-size:14px;line-height:1.45}
+.hint b{color:var(--gold2)}
+.btn{border:1px solid var(--gold);background:linear-gradient(180deg,#9a2a3a,#6a1420);color:var(--ivory);padding:12px 22px;border-radius:30px;font-weight:800;font-size:15px}
+.btn.gold{background:linear-gradient(180deg,#f8dea0,#c99a3a);color:#2a1408}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.2);color:#e8dcc4}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+#cardPrev{width:100%;max-width:440px;display:block;margin:14px auto 0;border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+/* welcome modal */
+#welcome{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 30%,rgba(60,20,34,.85),rgba(10,4,8,.96))}
+#welcome.gone{display:none}
+#welcome .in{width:min(560px,100%);padding:30px 30px 26px;text-align:center;background:var(--glass);border:1px solid var(--gold);border-radius:26px}
+#welcome .p{font-family:Cinzel,serif;letter-spacing:.36em;font-size:12px;color:var(--gold2)}
+#welcome h1{font-family:Cinzel,serif;font-size:clamp(32px,6vw,48px);line-height:1.05;margin-top:10px}
+#welcome .s{margin-top:10px;font-size:15px;color:#e8dcc4;line-height:1.5}
+#welcome label{display:block;text-align:left;margin-top:16px;font-size:12px;letter-spacing:.2em;font-weight:800;color:var(--gold2)}
+#welcome input{width:100%;margin-top:6px;padding:13px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:var(--ivory);font-size:17px;font-family:inherit;font-weight:600;outline:none}
+#welcome input:focus{border-color:var(--gold)}
+#welcome .titles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;font-size:11px;color:#cdbba0}
+#welcome .titles div{padding:7px 4px;border-radius:10px;background:rgba(255,255,255,.05);line-height:1.3}
+#welcome .titles b{display:block;color:var(--ivory);font-size:12px}
+#welcome .btn{margin-top:20px;width:100%}
+#welcome .err{color:#ffb08a;font-size:13px;margin-top:8px;min-height:18px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;transition:.4s;z-index:60;padding:12px 22px;border-radius:30px;background:linear-gradient(90deg,#7a1f2b,#4a1220);border:1px solid var(--gold);font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:980px){#app{grid-template-columns:1fr;padding:12px;gap:14px}#stage{position:relative;top:0}#side{min-height:0}#top{flex-wrap:wrap;padding:10px 14px;gap:8px}#top .sp{display:none}#rows{grid-template-columns:repeat(2,1fr)}#tabs button{font-size:11.5px}}
+@media (max-width:560px){.dl{grid-template-columns:repeat(2,1fr);gap:6px;padding:8px}#top .brand small{display:none}#top .brand b{font-size:16px}#top{gap:6px}.pill{padding:5px 10px;font-size:12.5px}.pill i{font-size:10.5px}#rows{gap:6px}}
+</style>
+</head>
+<body>
+<div id="welcome"><div class="in">
+  <div class="p">LENKA ACADEMY · GREAT DASARA LAB 2026</div>
+  <h1>The King's Thali Studio</h1>
+  <div class="s">You cooked all day in the Royal Kitchen of Mysore Palace. Now serve the Maharaja a thali by <b>Raja Guru’s Rule</b> — and decorate it with the coins you earned!</div>
+  <label for="inName">YOUR NAME</label><input id="inName" maxlength="24" placeholder="e.g. Ananya" autocomplete="off">
+  <label for="inCoins">ROYAL COINS YOU EARNED TODAY (₹)</label><input id="inCoins" type="number" min="0" max="640" placeholder="0 – 640" inputmode="numeric">
+  <div class="titles"><div><b>Royal Taster</b>under ₹200</div><div><b>Junior Chef</b>₹200–399</div><div><b>Royal Chef</b>₹400–549</div><div><b>Head Chef</b>₹550+</div></div>
+  <div class="err" id="wErr"></div>
+  <button class="btn gold" id="wGo">Enter the Studio ▸</button>
+</div></div>
+
+<div id="top">
+  <div class="brand"><small>LENKA ACADEMY · DAY 2 · CLASSES 8–9</small><b>The King's Thali Studio</b></div>
+  <div class="sp"></div>
+  <div class="pill" id="titleBadge">♛ <span id="tTitle">Royal Taster</span></div>
+  <div class="pill"><i>EARNED</i> <span class="coin">₹</span><span id="tEarn">0</span></div>
+  <div class="pill"><i>SPENT</i> <span id="tSpent">0</span></div>
+  <div class="pill"><i>LEFT</i> <span class="coin">₹</span><span id="tLeft">0</span></div>
+</div>
+
+<div id="app">
+  <div class="panel" id="stage">
+    <div class="hd"><h2 id="stageName">The King's Thali</h2><span>LIVE PREVIEW</span></div>
+    <canvas id="cv" width="1100" height="1100"></canvas>
+    <div id="rule">
+      <div class="rh">♛ RAJA GURU’S RULE <b>800 g · 15% · 25% · 5 : 3</b></div>
+      <div id="bar"></div>
+      <div id="rows"></div>
+      <div id="ratioLine"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="side">
+    <div id="tabs">
+      <button data-t="plate" class="on"><b>I</b>Plate &amp; Table</button>
+      <button data-t="serve"><b>II</b>Serve</button>
+      <button data-t="touch"><b>III</b>Royal Touches</button>
+      <button data-t="card"><b>IV</b>Royal Card</button>
+    </div>
+    <div class="tab on" id="t-plate">
+      <h3>Choose your thali</h3>
+      <div class="sub">Every king needs a worthy plate. Pay with the coins you earned in the Royal Kitchen.</div>
+      <div class="grid" id="plates"></div>
+      <h3 style="margin-top:24px">Choose the royal table</h3>
+      <div class="grid" id="tables"></div>
+    </div>
+    <div class="tab" id="t-serve">
+      <h3>Serve by Raja Guru’s Rule</h3>
+      <div class="sub">The thali holds <b>800 g</b>: <b>sweets 15%</b>, <b>salad &amp; fruit 25%</b>, and the rest shared as <b>rice dishes : curries = 5 : 3</b>. Serving sizes are different for every dish — combine them cleverly to hit each section exactly. Dishes marked <b>COOKED TODAY</b> came from your kitchen!</div>
+      <div id="secs"></div>
+      <div class="sec"><div class="sh"><i style="background:#9a8a7a"></i><b>On the side</b><span>not weighed</span></div><div class="acc" id="sides"></div></div>
+    </div>
+    <div class="tab" id="t-touch">
+      <h3>Royal touches</h3>
+      <div class="sub">Decorate the Maharaja's thali. Each touch costs royal coins — choose wisely!</div>
+      <div class="grid" id="touches"></div>
+    </div>
+    <div class="tab" id="t-card">
+      <h3>Your Royal Thali Card</h3>
+      <div class="sub">Download your card and post it in the class group. Follow Raja Guru’s Rule exactly to earn the <b>Maharaja's Seal</b>!</div>
+      <div id="cardMsg" class="hint"></div>
+      <canvas id="cardPrev" width="1080" height="1500"></canvas>
+      <div class="row" style="justify-content:center"><button class="btn gold" id="dl">⬇ Download my Royal Card</button><button class="btn ghost" id="reset">↺ Start again</button></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+/* ======================= DATA ======================= */
+const SECTIONS = [
+  { id: 'rice', name: 'Rice dishes', tag: '5 parts of the rest', target: 300, color: '#e9c46a' },
+  { id: 'curry', name: 'Curries', tag: '3 parts of the rest', target: 180, color: '#e07a4a' },
+  { id: 'salad', name: 'Salad & fruit', tag: '25% of the thali', target: 200, color: '#8cc06a' },
+  { id: 'sweet', name: 'Sweets', tag: '15% of the thali', target: 120, color: '#e690b0' },
+];
+const DISHES = [
+  { id: 'bbb', sec: 'rice', name: 'Bisi Bele Bath', g: 60, unit: 'scoop', kind: 'mound', base: '#b8692d', spk: ['#e9c76c', '#6a8a2a', '#7a3a10', '#f2e6c8'], grains: '#d98a4a', today: 1 },
+  { id: 'curd', sec: 'rice', name: 'Curd Rice', g: 60, unit: 'scoop', kind: 'mound', base: '#f3eee0', spk: ['#2a2a2a', '#4f8a2a', '#e0a020', '#c8202a'], grains: '#ffffff' },
+  { id: 'lemon', sec: 'rice', name: 'Lemon Rice', g: 60, unit: 'scoop', kind: 'mound', base: '#f0c43a', spk: ['#c88a4a', '#4f8a2a', '#2a2a2a', '#d9a060'], grains: '#fbe28a' },
+  { id: 'puli', sec: 'rice', name: 'Puliyogare', g: 60, unit: 'scoop', kind: 'mound', base: '#a35f2c', spk: ['#e3b06a', '#3a2a1a', '#4f8a2a', '#c8202a'], grains: '#c47a40' },
+  { id: 'vangi', sec: 'rice', name: 'Vangi Bath', g: 60, unit: 'scoop', kind: 'mound', base: '#a8562c', spk: ['#5a2a5a', '#e3b06a', '#4f8a2a'], grains: '#c8743c' },
+  { id: 'gheerice', sec: 'rice', name: 'Ghee Rice', g: 60, unit: 'scoop', kind: 'mound', base: '#fbf4e2', spk: ['#e8c890', '#5a2a1a', '#e8c890', '#d9a060'], grains: '#ffffff' },
+  { id: 'saaru', sec: 'curry', name: 'Saaru (Rasam)', g: 60, unit: 'katori', kind: 'katori', base: '#a8391b', bits: ['#e3402a', '#4f8a2a', '#f0c060'], today: 1 },
+  { id: 'sambar', sec: 'curry', name: 'Sambar', g: 60, unit: 'katori', kind: 'katori', base: '#c8742a', bits: ['#e8a040', '#7a3a10', '#4f8a2a', '#f3e0b0'] },
+  { id: 'palya', sec: 'curry', name: 'Beans Palya', g: 30, unit: 'scoop', kind: 'mound', base: '#6f9a32', spk: ['#f2efe2', '#9ac04a', '#2a2a2a', '#e0b040'], grains: '#8fbf4a' },
+  { id: 'kootu', sec: 'curry', name: 'Kootu', g: 60, unit: 'katori', kind: 'katori', base: '#d6b45a', bits: ['#8fbf4a', '#f3e8c0', '#c88a3a'] },
+  { id: 'majjige', sec: 'curry', name: 'Majjige Huli', g: 60, unit: 'katori', kind: 'katori', base: '#f0e2a8', bits: ['#4f8a2a', '#e0a020', '#f8f4e0'] },
+  { id: 'gojju', sec: 'curry', name: 'Pineapple Gojju', g: 60, unit: 'katori', kind: 'katori', base: '#b8461a', bits: ['#f2c43a', '#7a2a10', '#f2c43a'] },
+  { id: 'kosambari', sec: 'salad', name: 'Kosambari', g: 50, unit: 'scoop', kind: 'mound', base: '#dccb6e', spk: ['#4f9a36', '#c8302a', '#f2ecd0', '#4f9a36'], grains: '#efe09a', today: 1 },
+  { id: 'banana', sec: 'salad', name: 'Banana', g: 100, unit: 'banana', kind: 'banana', today: 1 },
+  { id: 'carrot', sec: 'salad', name: 'Carrot Kosambari', g: 25, unit: 'scoop', kind: 'mound', base: '#f08a2a', spk: ['#4f9a36', '#f8d090', '#c85a1a'], grains: '#ffaa4a' },
+  { id: 'mango', sec: 'salad', name: 'Mango Slices', g: 25, unit: 'slice', kind: 'mango' },
+  { id: 'cucumber', sec: 'salad', name: 'Cucumber', g: 25, unit: 'slices', kind: 'cucumber' },
+  { id: 'pomegranate', sec: 'salad', name: 'Pomegranate', g: 50, unit: 'katori', kind: 'pomegranate' },
+  { id: 'mpak', sec: 'sweet', name: 'Mysore Pak', g: 20, unit: 'piece', kind: 'mpak', today: 1 },
+  { id: 'laddu', sec: 'sweet', name: 'Boondi Laddu', g: 40, unit: 'laddu', kind: 'laddu', today: 1 },
+  { id: 'kesari', sec: 'sweet', name: 'Kesari Bath', g: 40, unit: 'scoop', kind: 'mound', base: '#f28a1a', spk: ['#f8e0a8', '#6a2a10', '#f8e0a8', '#ffcf6a'], grains: '#ffb04a', today: 1 },
+  { id: 'holige', sec: 'sweet', name: 'Holige', g: 60, unit: 'holige', kind: 'holige' },
+  { id: 'chiroti', sec: 'sweet', name: 'Chiroti', g: 20, unit: 'piece', kind: 'chiroti' },
+  { id: 'payasam', sec: 'sweet', name: 'Payasam', g: 60, unit: 'katori', kind: 'katori', base: '#f2dfb0', bits: ['#e8c890', '#5a2a1a', '#f8f0d8', '#e8c890'] },
+  { id: 'jalebi', sec: 'sweet', name: 'Jalebi', g: 20, unit: 'jalebi', kind: 'jalebi' },
+];
+const SIDES = [{ id: 'pickle', name: 'Mango pickle' }, { id: 'salt', name: 'Salt' }, { id: 'chutney', name: 'Coconut chutney' }, { id: 'papad', name: 'Happala (papad)' }];
+const PLATES = [
+  { id: 'leaf', name: 'Banana Leaf', cost: 0 },
+  { id: 'brass', name: 'Brass Thali', cost: 100 },
+  { id: 'silver', name: 'Silver Thali', cost: 250 },
+  { id: 'royal', name: 'Royal Gold-rim Thali', cost: 450 },
+];
+const TABLES = [{ id: 'teak', name: 'Teak Wood', cost: 0 }, { id: 'marble', name: 'White Marble', cost: 40 }, { id: 'silk', name: 'Royal Silk', cost: 80 }];
+const TOUCHES = [
+  { id: 'leaves', name: 'Curry leaves & tulasi', cost: 0 },
+  { id: 'ghee', name: 'Ghee drizzle', cost: 0 },
+  { id: 'jasmine', name: 'Mysore jasmine garland', cost: 40 },
+  { id: 'marigold', name: 'Marigold petals', cost: 20 },
+  { id: 'rose', name: 'Rose petals', cost: 25 },
+  { id: 'rangoli', name: 'Rangoli border', cost: 60 },
+  { id: 'diya', name: 'Brass diya', cost: 30 },
+  { id: 'tumbler', name: 'Silver tumbler', cost: 30 },
+  { id: 'napkin', name: 'Mysore silk napkin', cost: 40 },
+  { id: 'vark', name: 'Gold leaf on sweets', cost: 50 },
+  { id: 'elephant', name: 'Elephant gold katoris', cost: 80 },
+];
+const TITLES = [[550, 'Head Chef'], [400, 'Royal Chef'], [200, 'Junior Chef'], [0, 'Royal Taster']];
+
+/* ======================= STATE ======================= */
+const S = { name: '', coins: 0, plate: 'leaf', table: 'teak', qty: {}, sides: { pickle: true, salt: true }, touch: { leaves: true } };
+function load() { try { const j = JSON.parse(localStorage.getItem('kingsThali89') || 'null'); if (j) Object.assign(S, j); } catch (e) { } }
+function save() { try { localStorage.setItem('kingsThali89', JSON.stringify(S)); } catch (e) { } }
+const title = () => TITLES.find(t => S.coins >= t[0])[1];
+const spent = () => (PLATES.find(p => p.id === S.plate).cost + TABLES.find(t => t.id === S.table).cost + TOUCHES.filter(t => S.touch[t.id]).reduce((a, t) => a + t.cost, 0));
+const left = () => S.coins - spent();
+const secGrams = id => DISHES.filter(d => d.sec === id).reduce((a, d) => a + (S.qty[d.id] || 0) * d.g, 0);
+const total = () => SECTIONS.reduce((a, s) => a + secGrams(s.id), 0);
+const ruleOK = () => SECTIONS.every(s => secGrams(s.id) === s.target);
+
+/* ======================= DRAWING HELPERS ======================= */
+function hash(t) { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return (h % 2147483646) + 1; }
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function shade(hex, k) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; if (k > 0) { r += (255 - r) * k; g += (255 - g) * k; b += (255 - b) * k; } else { r *= 1 + k; g *= 1 + k; b *= 1 + k; } return `rgb(${r | 0},${g | 0},${b | 0})`; }
+function softShadow(c, x, y, rx, ry, a = 0.35) { c.save(); const g = c.createRadialGradient(x, y, 0, x, y, rx); g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.scale(1, ry / rx); c.beginPath(); c.arc(x, y * rx / ry, rx, 0, 7); c.fill(); c.restore(); }
+function leaf(c, x, y, len, ang, col = '#3f7a2a') { c.save(); c.translate(x, y); c.rotate(ang); const g = c.createLinearGradient(0, -len * 0.3, 0, len * 0.3); g.addColorStop(0, shade(col, 0.25)); g.addColorStop(1, shade(col, -0.25)); c.fillStyle = g; c.beginPath(); c.moveTo(-len / 2, 0); c.quadraticCurveTo(0, -len * 0.38, len / 2, 0); c.quadraticCurveTo(0, len * 0.38, -len / 2, 0); c.fill(); c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = Math.max(1, len * 0.04); c.beginPath(); c.moveTo(-len * 0.45, 0); c.lineTo(len * 0.45, 0); c.stroke(); c.restore(); }
+function metalGrad(c, x, y, r, type) {
+  const M = { brass: ['#fff0b8', '#e3b04a', '#a8761c', '#6a4a10'], silver: ['#ffffff', '#dfe2e6', '#a8adb4', '#6a7078'], gold: ['#fff4c0', '#f0c650', '#c08a18', '#7a5208'], steel: ['#ffffff', '#d4d8dc', '#9aa0a8', '#5a6068'] }[type];
+  const g = c.createRadialGradient(x - r * 0.35, y - r * 0.45, r * 0.05, x, y, r * 1.05); g.addColorStop(0, M[0]); g.addColorStop(0.35, M[1]); g.addColorStop(0.8, M[2]); g.addColorStop(1, M[3]); return g;
+}
+/* ---------- food drawers ---------- */
+function drawMound(c, x, y, r, d, opt) {
+  softShadow(c, x + r * 0.08, y + r * 0.2, r * 1.15, r * 0.9, 0.4);
+  const g = c.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.05, x, y, r); g.addColorStop(0, shade(d.base, 0.35)); g.addColorStop(0.55, d.base); g.addColorStop(1, shade(d.base, -0.3));
+  c.fillStyle = g; c.beginPath(); const R = rng(hash(d.id + 'm'));
+  for (let i = 0; i <= 28; i++) { const a = i / 28 * Math.PI * 2, rr = r * (0.93 + R() * 0.1); i ? c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr) : c.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill();
+  c.save(); c.clip();
+  const n = Math.round(r * r * 0.05);
+  for (let i = 0; i < n; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * r; c.fillStyle = d.grains; c.globalAlpha = 0.5 + R() * 0.4; c.beginPath(); c.ellipse(x + Math.cos(a) * rr, y + Math.sin(a) * rr, r * 0.05, r * 0.022, R() * 3, 0, 7); c.fill(); }
+  c.globalAlpha = 1;
+  for (let i = 0; i < n * 0.25; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * r * 0.92; c.fillStyle = d.spk[(R() * d.spk.length) | 0]; c.beginPath(); c.arc(x + Math.cos(a) * rr, y + Math.sin(a) * rr, r * (0.03 + R() * 0.04), 0, 7); c.fill(); }
+  const hl = c.createRadialGradient(x - r * 0.4, y - r * 0.45, 0, x - r * 0.4, y - r * 0.45, r * 0.7); hl.addColorStop(0, 'rgba(255,255,255,.35)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = hl; c.fillRect(x - r, y - r, r * 2, r * 2);
+  if (opt.ghee && (d.sec === 'rice' || d.id === 'kesari')) { c.strokeStyle = 'rgba(255,236,170,.75)'; c.lineWidth = r * 0.07; c.lineCap = 'round'; c.beginPath(); c.arc(x - r * 0.05, y - r * 0.05, r * 0.5, 3.6, 5.2); c.stroke(); c.fillStyle = 'rgba(255,240,190,.6)'; c.beginPath(); c.ellipse(x + r * 0.1, y - r * 0.2, r * 0.18, r * 0.1, -0.4, 0, 7); c.fill(); }
+  c.restore();
+  if (opt.leaves && d.sec !== 'sweet') leaf(c, x + r * 0.35, y - r * 0.45, r * 0.55, -0.6, d.id === 'curd' || d.id === 'gheerice' ? '#3f8a2a' : '#4f9a36');
+  if (opt.vark && d.sec === 'sweet') varkOn(c, x, y, r * 0.8, d.id);
+}
+function drawKatori(c, x, y, r, d, opt) {
+  const metal = opt.elephant ? 'gold' : opt.katoriMetal;
+  softShadow(c, x + r * 0.1, y + r * 0.22, r * 1.25, r * 1.0, 0.45);
+  c.fillStyle = metalGrad(c, x, y, r, metal); c.beginPath(); c.arc(x, y, r, 0, 7); c.fill();
+  c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = r * 0.04; c.beginPath(); c.arc(x, y, r * 0.95, 3.5, 5.4); c.stroke();
+  if (opt.elephant) { c.save(); c.strokeStyle = 'rgba(120,80,10,.7)'; c.lineWidth = r * 0.025; for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; const ex = x + Math.cos(a) * r * 0.9, ey = y + Math.sin(a) * r * 0.9; c.beginPath(); c.arc(ex, ey, r * 0.06, 0, 7); c.stroke(); } c.restore(); }
+  const ri = r * 0.8;
+  c.fillStyle = shade(metal === 'silver' || metal === 'steel' ? '#9aa0a8' : '#a8761c', -0.2); c.beginPath(); c.arc(x, y, ri * 1.02, 0, 7); c.fill();
+  if (d.kind === 'pomegranate') { const R = rng(hash(d.id)); c.fillStyle = '#f6d8c8'; c.beginPath(); c.arc(x, y, ri, 0, 7); c.fill(); for (let i = 0; i < 70; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * ri * 0.92; const sx = x + Math.cos(a) * rr, sy = y + Math.sin(a) * rr; const g = c.createRadialGradient(sx - 2, sy - 2, 0, sx, sy, ri * 0.13); g.addColorStop(0, '#ff8a9a'); g.addColorStop(1, '#a8102a'); c.fillStyle = g; c.beginPath(); c.ellipse(sx, sy, ri * 0.11, ri * 0.085, R() * 3, 0, 7); c.fill(); } return; }
+  const g = c.createRadialGradient(x - ri * 0.3, y - ri * 0.35, ri * 0.05, x, y, ri); g.addColorStop(0, shade(d.base, 0.3)); g.addColorStop(0.7, d.base); g.addColorStop(1, shade(d.base, -0.35)); c.fillStyle = g; c.beginPath(); c.arc(x, y, ri, 0, 7); c.fill();
+  const R = rng(hash(d.id + 'k'));
+  c.save(); c.beginPath(); c.arc(x, y, ri, 0, 7); c.clip();
+  for (let i = 0; i < 26; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * ri * 0.85; c.fillStyle = d.bits[(R() * d.bits.length) | 0]; c.globalAlpha = 0.85; c.beginPath(); c.ellipse(x + Math.cos(a) * rr, y + Math.sin(a) * rr, ri * (0.05 + R() * 0.06), ri * (0.035 + R() * 0.04), R() * 3, 0, 7); c.fill(); }
+  c.globalAlpha = 1; c.fillStyle = 'rgba(255,255,255,.28)'; c.beginPath(); c.ellipse(x - ri * 0.3, y - ri * 0.35, ri * 0.35, ri * 0.14, -0.5, 0, 7); c.fill();
+  c.restore();
+  if (opt.leaves && d.sec === 'curry') { leaf(c, x - ri * 0.25, y + ri * 0.1, ri * 0.45, 0.7, '#2f7a2a'); leaf(c, x + ri * 0.2, y + ri * 0.2, ri * 0.4, -0.4, '#3f8a2a'); }
+  if (opt.vark && d.sec === 'sweet') varkOn(c, x, y, ri * 0.7, d.id);
+}
+function varkOn(c, x, y, r, id) { const R = rng(hash(id + 'v')); c.save(); for (let i = 0; i < 9; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * r; const sx = x + Math.cos(a) * rr, sy = y + Math.sin(a) * rr, s = r * (0.08 + R() * 0.12); const g = c.createLinearGradient(sx - s, sy - s, sx + s, sy + s); g.addColorStop(0, '#fff6c8'); g.addColorStop(0.5, '#e8c050'); g.addColorStop(1, '#fff2b0'); c.fillStyle = g; c.globalAlpha = 0.9; c.beginPath(); c.moveTo(sx - s, sy); c.lineTo(sx - s * 0.2, sy - s * 0.8); c.lineTo(sx + s, sy - s * 0.1); c.lineTo(sx + s * 0.3, sy + s * 0.8); c.closePath(); c.fill(); } c.restore(); }
+function drawMpak(c, x, y, s, opt) { softShadow(c, x + s * 0.06, y + s * 0.12, s * 0.85, s * 0.6, 0.4); const g = c.createLinearGradient(x - s / 2, y - s / 2, x + s / 2, y + s / 2); g.addColorStop(0, '#ffd27a'); g.addColorStop(0.6, '#e8a33a'); g.addColorStop(1, '#b8701a'); c.fillStyle = g; c.beginPath(); c.roundRect(x - s / 2, y - s / 2, s, s, s * 0.14); c.fill(); const R = rng(hash('mp' + x + y)); c.fillStyle = 'rgba(120,60,10,.45)'; for (let i = 0; i < 16; i++) { c.beginPath(); c.arc(x - s * 0.4 + R() * s * 0.8, y - s * 0.4 + R() * s * 0.8, s * 0.025 + R() * s * 0.025, 0, 7); c.fill(); } c.fillStyle = 'rgba(255,255,255,.3)'; c.fillRect(x - s * 0.42, y - s * 0.42, s * 0.84, s * 0.12); if (opt.vark) varkOn(c, x, y, s * 0.4, 'mp' + x); }
+function drawLaddu(c, x, y, r, opt) { softShadow(c, x + r * 0.1, y + r * 0.3, r * 1.2, r * 0.9, 0.45); const g = c.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r); g.addColorStop(0, '#ffcf6a'); g.addColorStop(0.6, '#f0961a'); g.addColorStop(1, '#b85a08'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.save(); c.beginPath(); c.arc(x, y, r, 0, 7); c.clip(); for (let ring = 0; ring < 5; ring++) { const rr = r * (0.2 + ring * 0.2), n = 6 + ring * 7; for (let k = 0; k < n; k++) { const a = k / n * 6.283 + ring; const bx = x + Math.cos(a) * rr, by = y + Math.sin(a) * rr; const bg = c.createRadialGradient(bx - r * 0.03, by - r * 0.03, 0, bx, by, r * 0.1); bg.addColorStop(0, 'rgba(255,230,150,.9)'); bg.addColorStop(1, 'rgba(180,90,10,.0)'); c.fillStyle = bg; c.beginPath(); c.arc(bx, by, r * 0.1, 0, 7); c.fill(); } } c.restore(); if (opt.vark) varkOn(c, x, y, r * 0.7, 'ld' + x); }
+function drawJalebi(c, x, y, r) { softShadow(c, x, y + r * 0.2, r * 1.2, r * 0.9, 0.35); c.save(); c.lineCap = 'round'; for (const [w, col] of [[r * 0.26, '#b8500a'], [r * 0.2, '#f08a10'], [r * 0.07, 'rgba(255,220,140,.9)']]) { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); for (let a = 0; a < 15; a += 0.15) { const rr = r * (0.12 + a * 0.058); const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr; a ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke(); } c.restore(); }
+function drawChiroti(c, x, y, r) { softShadow(c, x, y + r * 0.15, r * 1.15, r * 0.8, 0.3); for (let k = 0; k < 4; k++) { const rr = r * (1 - k * 0.2); const g = c.createRadialGradient(x - rr * 0.3, y - rr * 0.3, 0, x, y, rr); g.addColorStop(0, '#fffaf0'); g.addColorStop(1, '#e8d4a8'); c.fillStyle = g; c.beginPath(); for (let i = 0; i <= 20; i++) { const a = i / 20 * 6.283, w = rr * (0.94 + 0.06 * Math.sin(a * 7 + k)); i ? c.lineTo(x + Math.cos(a) * w, y + Math.sin(a) * w) : c.moveTo(x + Math.cos(a) * w, y + Math.sin(a) * w); } c.fill(); c.strokeStyle = 'rgba(180,140,80,.35)'; c.lineWidth = 1.2; c.stroke(); } const R = rng(hash('ch' + x)); c.fillStyle = 'rgba(255,255,255,.9)'; for (let i = 0; i < 40; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * r * 0.8; c.fillRect(x + Math.cos(a) * rr, y + Math.sin(a) * rr, 2, 2); } }
+function drawHolige(c, x, y, r) { softShadow(c, x, y + r * 0.15, r * 1.15, r * 0.8, 0.35); const g = c.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); g.addColorStop(0, '#ffd37a'); g.addColorStop(0.7, '#e8a83a'); g.addColorStop(1, '#c07a20'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); const R = rng(hash('hl' + x)); for (let i = 0; i < 16; i++) { const a = R() * 6.283, rr = Math.sqrt(R()) * r * 0.85; c.fillStyle = `rgba(${120 + R() * 40},${60 + R() * 20},10,.55)`; c.beginPath(); c.ellipse(x + Math.cos(a) * rr, y + Math.sin(a) * rr, r * 0.08, r * 0.05, R() * 3, 0, 7); c.fill(); } c.fillStyle = 'rgba(255,240,190,.35)'; c.beginPath(); c.ellipse(x - r * 0.3, y - r * 0.35, r * 0.4, r * 0.15, -0.5, 0, 7); c.fill(); }
+function drawBanana(c, x, y, s, ang) { c.save(); c.translate(x, y); c.rotate(ang); softShadow(c, 0, s * 0.12, s * 0.75, s * 0.3, 0.35); const g = c.createLinearGradient(0, -s * 0.25, 0, s * 0.25); g.addColorStop(0, '#fff07a'); g.addColorStop(0.6, '#f2cf3a'); g.addColorStop(1, '#c89a1a'); c.fillStyle = g; c.beginPath(); c.moveTo(-s * 0.7, -s * 0.05); c.quadraticCurveTo(0, s * 0.5, s * 0.7, -s * 0.12); c.quadraticCurveTo(0, s * 0.18, -s * 0.7, -s * 0.05); c.fill(); c.fillStyle = '#5a4a1a'; c.beginPath(); c.arc(-s * 0.7, -s * 0.05, s * 0.04, 0, 7); c.fill(); c.fillStyle = '#7a9a2a'; c.beginPath(); c.arc(s * 0.7, -s * 0.12, s * 0.045, 0, 7); c.fill(); c.restore(); }
+function drawMango(c, x, y, s, ang) { c.save(); c.translate(x, y); c.rotate(ang); softShadow(c, 0, s * 0.1, s * 0.6, s * 0.3, 0.3); const g = c.createLinearGradient(0, -s * 0.3, 0, s * 0.3); g.addColorStop(0, '#ffcf3a'); g.addColorStop(1, '#f07a10'); c.fillStyle = g; c.beginPath(); c.moveTo(-s * 0.55, 0); c.quadraticCurveTo(0, -s * 0.5, s * 0.55, 0); c.quadraticCurveTo(0, -s * 0.12, -s * 0.55, 0); c.fill(); c.fillStyle = '#5a8a2a'; c.beginPath(); c.moveTo(-s * 0.55, 0); c.quadraticCurveTo(0, -s * 0.13, s * 0.55, 0); c.quadraticCurveTo(0, -s * 0.05, -s * 0.55, 0); c.fill(); c.restore(); }
+function drawCucumber(c, x, y, r) { softShadow(c, x, y + r * 0.15, r * 1.1, r * 0.8, 0.3); c.fillStyle = '#2f6a2a'; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); const g = c.createRadialGradient(x, y, 0, x, y, r * 0.88); g.addColorStop(0, '#f0f8d8'); g.addColorStop(1, '#a8d07a'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r * 0.86, 0, 7); c.fill(); c.fillStyle = 'rgba(160,190,110,.8)'; for (let k = 0; k < 7; k++) { const a = k / 7 * 6.283; c.beginPath(); c.ellipse(x + Math.cos(a) * r * 0.35, y + Math.sin(a) * r * 0.35, r * 0.09, r * 0.05, a, 0, 7); c.fill(); } }
+/* ---------- accompaniments ---------- */
+function drawSide(c, id, x, y, s) {
+  if (id === 'pickle') { softShadow(c, x, y + s * 0.15, s * 0.9, s * 0.6, 0.35); const g = c.createRadialGradient(x - s * 0.2, y - s * 0.2, 0, x, y, s * 0.7); g.addColorStop(0, '#e2582a'); g.addColorStop(1, '#7a1a08'); c.fillStyle = g; c.beginPath(); for (let i = 0; i <= 12; i++) { const a = i / 12 * 6.283, w = s * (0.5 + 0.12 * Math.sin(a * 3)); i ? c.lineTo(x + Math.cos(a) * w, y + Math.sin(a) * w) : c.moveTo(x + Math.cos(a) * w, y + Math.sin(a) * w); } c.fill(); c.fillStyle = 'rgba(255,200,120,.5)'; c.beginPath(); c.ellipse(x - s * 0.15, y - s * 0.15, s * 0.15, s * 0.07, -0.5, 0, 7); c.fill(); }
+  if (id === 'salt') { softShadow(c, x, y + s * 0.1, s * 0.6, s * 0.4, 0.3); const g = c.createRadialGradient(x - s * 0.1, y - s * 0.15, 0, x, y, s * 0.4); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#cfd2d6'); c.fillStyle = g; c.beginPath(); c.arc(x, y, s * 0.32, 0, 7); c.fill(); }
+  if (id === 'chutney') { softShadow(c, x, y + s * 0.15, s * 0.8, s * 0.55, 0.3); const g = c.createRadialGradient(x - s * 0.2, y - s * 0.2, 0, x, y, s * 0.6); g.addColorStop(0, '#fbfaf0'); g.addColorStop(1, '#d8dcc0'); c.fillStyle = g; c.beginPath(); c.arc(x, y, s * 0.48, 0, 7); c.fill(); const R = rng(77); for (let i = 0; i < 10; i++) { c.fillStyle = i % 3 ? '#2a2a2a' : '#c8302a'; c.beginPath(); c.arc(x + (R() - 0.5) * s * 0.6, y + (R() - 0.5) * s * 0.6, s * 0.03, 0, 7); c.fill(); } }
+  if (id === 'papad') { softShadow(c, x, y + s * 0.2, s * 1.3, s * 0.9, 0.3); const g = c.createRadialGradient(x - s * 0.3, y - s * 0.3, 0, x, y, s); g.addColorStop(0, '#fff3c8'); g.addColorStop(1, '#e2c27a'); c.fillStyle = g; c.beginPath(); for (let i = 0; i <= 24; i++) { const a = i / 24 * 6.283, w = s * (0.96 + 0.04 * Math.sin(a * 9)); i ? c.lineTo(x + Math.cos(a) * w, y + Math.sin(a) * w) : c.moveTo(x + Math.cos(a) * w, y + Math.sin(a) * w); } c.fill(); const R = rng(91); for (let i = 0; i < 26; i++) { c.fillStyle = 'rgba(190,140,60,.45)'; c.beginPath(); c.arc(x + (R() - 0.5) * s * 1.6, y + (R() - 0.5) * s * 1.6, s * 0.04 + R() * s * 0.05, 0, 7); c.fill(); } }
+}
+/* ---------- table, plate, decor ---------- */
+function drawTable(c, W, H, type) {
+  if (type === 'teak') { const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#7a4826'); g.addColorStop(1, '#4a2812'); c.fillStyle = g; c.fillRect(0, 0, W, H); const R = rng(5); const pw = W / 5; for (let p = 0; p < 5; p++) { c.fillStyle = `rgba(${p % 2 ? 255 : 0},${p % 2 ? 220 : 0},${p % 2 ? 180 : 0},.04)`; c.fillRect(p * pw, 0, pw, H); c.strokeStyle = 'rgba(30,14,6,.55)'; c.lineWidth = 3; c.beginPath(); c.moveTo(p * pw, 0); c.lineTo(p * pw, H); c.stroke(); for (let k = 0; k < 18; k++) { c.strokeStyle = `rgba(40,20,8,${0.12 + R() * 0.18})`; c.lineWidth = 1 + R() * 2; c.beginPath(); const x0 = p * pw + R() * pw; c.moveTo(x0, 0); for (let y = 0; y <= H; y += 40) c.lineTo(x0 + Math.sin(y * 0.01 + k) * 8, y); c.stroke(); } } }
+  if (type === 'marble') { c.fillStyle = '#efebe4'; c.fillRect(0, 0, W, H); const g = c.createRadialGradient(W * 0.3, H * 0.2, 0, W / 2, H / 2, W * 0.8); g.addColorStop(0, 'rgba(255,255,255,.7)'); g.addColorStop(1, 'rgba(200,195,185,.4)'); c.fillStyle = g; c.fillRect(0, 0, W, H); const R = rng(9); for (let k = 0; k < 14; k++) { c.strokeStyle = `rgba(120,115,110,${0.1 + R() * 0.2})`; c.lineWidth = 0.8 + R() * 2.4; c.beginPath(); let x = R() * W, y = 0; c.moveTo(x, y); while (y < H) { x += (R() - 0.5) * 120; y += 40 + R() * 60; c.lineTo(x, y); } c.stroke(); } }
+  if (type === 'silk') { const g = c.createRadialGradient(W / 2, H / 2, W * 0.1, W / 2, H / 2, W * 0.75); g.addColorStop(0, '#9a1f36'); g.addColorStop(1, '#4a0a18'); c.fillStyle = g; c.fillRect(0, 0, W, H); c.strokeStyle = 'rgba(240,190,90,.18)'; c.lineWidth = 2; for (let y = 40; y < H; y += 90) for (let x = 40 + ((y / 90) % 2) * 45; x < W; x += 90) { c.beginPath(); c.moveTo(x, y - 22); c.quadraticCurveTo(x + 22, y, x, y + 22); c.quadraticCurveTo(x - 22, y, x, y - 22); c.stroke(); c.beginPath(); c.arc(x, y, 5, 0, 7); c.stroke(); } const b = 46; c.fillStyle = 'rgba(214,166,72,.85)'; c.fillRect(0, 0, W, b * 0.5); c.fillRect(0, H - b * 0.5, W, b * 0.5); c.fillRect(0, 0, b * 0.5, H); c.fillRect(W - b * 0.5, 0, b * 0.5, H); c.strokeStyle = 'rgba(255,230,160,.9)'; c.lineWidth = 3; c.strokeRect(b * 0.7, b * 0.7, W - b * 1.4, H - b * 1.4); }
+  const v = c.createRadialGradient(W / 2, H / 2, W * 0.35, W / 2, H / 2, W * 0.75); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.45)'); c.fillStyle = v; c.fillRect(0, 0, W, H);
+}
+function drawRangoli(c, x, y, R) {
+  const cols = ['#ff5a7a', '#ffd23a', '#3ac6ff', '#7ae05a', '#ff8a2a', '#ffffff', '#b45aff'];
+  for (let ring = 0; ring < 3; ring++) { const rr = R * (1.16 + ring * 0.09); const n = 24 + ring * 8; for (let k = 0; k < n; k++) { const a = k / n * 6.283 + ring * 0.13; const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr; c.save(); c.translate(px, py); c.rotate(a); c.fillStyle = cols[(k + ring * 2) % cols.length]; c.beginPath(); c.moveTo(-R * 0.035, 0); c.quadraticCurveTo(0, -R * 0.03, R * 0.035, 0); c.quadraticCurveTo(0, R * 0.03, -R * 0.035, 0); c.fill(); c.restore(); c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.arc(x + Math.cos(a + 3.14 / n) * rr, y + Math.sin(a + 3.14 / n) * rr, R * 0.008, 0, 7); c.fill(); } }
+}
+function drawGarland(c, x, y, R, sx = 1, sy = 1) { const n = 64; for (let k = 0; k < n; k++) { const a = k / n * 6.283; const px = x + Math.cos(a) * R * sx, py = y + Math.sin(a) * R * sy; if (k % 2) { leaf(c, px, py, R * 0.07, a + 1.57, '#3f8a2a'); } else { c.save(); c.translate(px, py); for (let p = 0; p < 5; p++) { c.rotate(1.2566); c.fillStyle = '#ffffff'; c.beginPath(); c.ellipse(R * 0.018, 0, R * 0.02, R * 0.011, 0, 0, 7); c.fill(); } c.fillStyle = '#f2e6a0'; c.beginPath(); c.arc(0, 0, R * 0.009, 0, 7); c.fill(); c.restore(); } } }
+function scatterPetals(c, W, H, cx, cy, R, cols, n, seed) { const Rr = rng(seed); for (let i = 0; i < n; i++) { const a = Rr() * 6.283, d = R * (1.12 + Rr() * 0.42); const px = cx + Math.cos(a) * d, py = cy + Math.sin(a) * d; if (px < 10 || py < 10 || px > W - 10 || py > H - 10) continue; c.save(); c.translate(px, py); c.rotate(Rr() * 6.28); const s = R * (0.025 + Rr() * 0.02); const g = c.createRadialGradient(-s * 0.3, -s * 0.3, 0, 0, 0, s * 1.2); const col = cols[(Rr() * cols.length) | 0]; g.addColorStop(0, shade(col, 0.3)); g.addColorStop(1, shade(col, -0.2)); c.fillStyle = g; c.beginPath(); c.ellipse(0, 0, s * 1.2, s * 0.75, 0, 0, 7); c.fill(); c.restore(); } }
+function drawDiya(c, x, y, s) { softShadow(c, x, y + s * 0.3, s * 1.2, s * 0.6, 0.45); const g = c.createRadialGradient(x - s * 0.3, y - s * 0.2, 0, x, y, s); g.addColorStop(0, '#fff0b8'); g.addColorStop(0.4, '#e3b04a'); g.addColorStop(1, '#8a5a12'); c.fillStyle = g; c.beginPath(); c.ellipse(x, y, s, s * 0.62, 0, 0, 7); c.fill(); c.fillStyle = '#7a4a10'; c.beginPath(); c.ellipse(x, y, s * 0.75, s * 0.45, 0, 0, 7); c.fill(); c.fillStyle = '#f2c050'; c.beginPath(); c.ellipse(x, y, s * 0.68, s * 0.38, 0, 0, 7); c.fill(); const gl = c.createRadialGradient(x + s * 0.55, y - s * 0.35, 0, x + s * 0.55, y - s * 0.35, s * 1.6); gl.addColorStop(0, 'rgba(255,220,130,.75)'); gl.addColorStop(1, 'rgba(255,170,60,0)'); c.fillStyle = gl; c.beginPath(); c.arc(x + s * 0.55, y - s * 0.35, s * 1.6, 0, 7); c.fill(); c.fillStyle = '#fff6d0'; c.beginPath(); c.moveTo(x + s * 0.55, y - s * 0.75); c.quadraticCurveTo(x + s * 0.78, y - s * 0.3, x + s * 0.55, y - s * 0.22); c.quadraticCurveTo(x + s * 0.32, y - s * 0.3, x + s * 0.55, y - s * 0.75); c.fill(); c.fillStyle = '#ffb030'; c.beginPath(); c.ellipse(x + s * 0.55, y - s * 0.32, s * 0.08, s * 0.14, 0, 0, 7); c.fill(); }
+function drawTumbler(c, x, y, r) { softShadow(c, x + r * 0.1, y + r * 0.25, r * 1.3, r * 1.0, 0.45); c.fillStyle = metalGrad(c, x, y, r, 'silver'); c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.fillStyle = metalGrad(c, x, y, r * 0.86, 'steel'); c.beginPath(); c.arc(x, y, r * 0.86, 0, 7); c.fill(); const w = c.createRadialGradient(x - r * 0.2, y - r * 0.25, 0, x, y, r * 0.8); w.addColorStop(0, 'rgba(220,240,255,.9)'); w.addColorStop(1, 'rgba(120,170,200,.6)'); c.fillStyle = w; c.beginPath(); c.arc(x, y, r * 0.78, 0, 7); c.fill(); c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = r * 0.05; c.beginPath(); c.arc(x, y, r * 0.55, 3.6, 5.0); c.stroke(); }
+function drawNapkin(c, x, y, s) { c.save(); c.translate(x, y); c.rotate(-0.5); softShadow(c, s * 0.05, s * 0.2, s * 1.1, s * 0.6, 0.4); const g = c.createLinearGradient(-s, -s, s, s); g.addColorStop(0, '#c8304a'); g.addColorStop(1, '#6a0a1e'); c.fillStyle = g; c.beginPath(); c.moveTo(-s, s * 0.5); c.lineTo(0, -s * 0.6); c.lineTo(s, s * 0.5); c.closePath(); c.fill(); c.strokeStyle = '#e8b84a'; c.lineWidth = s * 0.06; c.stroke(); c.strokeStyle = 'rgba(232,184,74,.6)'; c.lineWidth = s * 0.02; c.beginPath(); c.moveTo(-s * 0.7, s * 0.35); c.lineTo(0, -s * 0.38); c.lineTo(s * 0.7, s * 0.35); c.stroke(); c.restore(); }
+function drawPlate(c, x, y, R, type) {
+  if (type === 'leaf') {
+    c.save(); c.translate(x - R * 0.08, y); c.scale(1, 0.62); softShadow(c, R * 0.1, R * 0.2, R * 1.5, R * 1.45, 0.5); c.restore();
+    c.save(); c.translate(x - R * 0.08, y); c.rotate(-0.02);
+    const path = () => { c.beginPath(); c.moveTo(-R * 1.3, -R * 0.6);
+      c.bezierCurveTo(-R * 0.6, -R * 0.68, R * 0.3, -R * 0.7, R * 0.95, -R * 0.62);
+      c.bezierCurveTo(R * 1.3, -R * 0.55, R * 1.5, -R * 0.2, R * 1.5, -R * 0.02);
+      c.bezierCurveTo(R * 1.48, R * 0.22, R * 1.3, R * 0.55, R * 0.95, R * 0.64);
+      c.bezierCurveTo(R * 0.3, R * 0.72, -R * 0.6, R * 0.7, -R * 1.3, R * 0.62);
+      c.lineTo(-R * 1.27, R * 0.2); c.lineTo(-R * 1.31, -R * 0.15); c.closePath(); };
+    path(); const g = c.createLinearGradient(0, -R * 0.7, 0, R * 0.7); g.addColorStop(0, '#3f8a26'); g.addColorStop(0.47, '#5aa236'); g.addColorStop(0.53, '#4c9630'); g.addColorStop(1, '#245a16'); c.fillStyle = g; c.fill();
+    c.save(); path(); c.clip();
+    for (let k = -R * 1.45; k < R * 1.55; k += R * 0.045) { const t = (k / R + 1.4) / 3; c.strokeStyle = `rgba(${200 - t * 40},245,170,${0.1 + (Math.round(k / R / 0.045) % 3 === 0 ? 0.1 : 0)})`; c.lineWidth = 1.6; c.beginPath(); c.moveTo(k, -R * 0.02); c.quadraticCurveTo(k + R * 0.05, -R * 0.38, k + R * 0.12, -R * 0.78); c.stroke(); c.beginPath(); c.moveTo(k, R * 0.02); c.quadraticCurveTo(k + R * 0.05, R * 0.38, k + R * 0.12, R * 0.78); c.stroke(); }
+    c.strokeStyle = 'rgba(20,60,10,.55)'; c.lineWidth = R * 0.08; path(); c.stroke();
+    c.strokeStyle = 'rgba(40,90,20,.35)'; c.lineWidth = R * 0.16; path(); c.stroke();
+    const hl = c.createRadialGradient(-R * 0.4, -R * 0.3, 0, -R * 0.4, -R * 0.3, R * 1.3); hl.addColorStop(0, 'rgba(255,255,230,.22)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = hl; c.fillRect(-R * 1.6, -R, R * 3.2, R * 2);
+    c.restore();
+    const mg = c.createLinearGradient(0, -R * 0.03, 0, R * 0.03); mg.addColorStop(0, '#d8eeb0'); mg.addColorStop(1, '#7aa84a'); c.strokeStyle = mg; c.lineWidth = R * 0.035; c.lineCap = 'round'; c.beginPath(); c.moveTo(-R * 1.29, R * 0.01); c.quadraticCurveTo(0, -R * 0.03, R * 1.46, -R * 0.02); c.stroke();
+    c.restore(); return;
+  }
+  softShadow(c, x + R * 0.04, y + R * 0.12, R * 1.18, R * 1.12, 0.55);
+  const base = type === 'brass' ? 'brass' : 'silver';
+  c.fillStyle = metalGrad(c, x, y, R * 1.06, type === 'royal' ? 'gold' : base); c.beginPath(); c.arc(x, y, R * 1.06, 0, 7); c.fill();
+  c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = R * 0.012; c.beginPath(); c.arc(x, y, R * 1.03, 3.4, 5.6); c.stroke();
+  if (type === 'royal') { for (let k = 0; k < 48; k++) { const a = k / 48 * 6.283; const px = x + Math.cos(a) * R * 1.0, py = y + Math.sin(a) * R * 1.0; c.fillStyle = k % 2 ? '#fff2b0' : '#a8701a'; c.beginPath(); c.arc(px, py, R * 0.012, 0, 7); c.fill(); } }
+  c.fillStyle = shade(type === 'brass' ? '#a8761c' : '#9aa0a8', -0.15); c.beginPath(); c.arc(x, y, R * 0.94, 0, 7); c.fill();
+  c.fillStyle = metalGrad(c, x, y, R * 0.93, base); c.beginPath(); c.arc(x, y, R * 0.93, 0, 7); c.fill();
+  c.strokeStyle = 'rgba(255,255,255,.12)'; c.lineWidth = 1.5; for (let k = 1; k < 9; k++) { c.beginPath(); c.arc(x, y, R * 0.93 * k / 9, 0, 7); c.stroke(); }
+  if (type === 'royal') { c.strokeStyle = 'rgba(200,150,50,.8)'; c.lineWidth = R * 0.008; c.beginPath(); c.arc(x, y, R * 0.92, 0, 7); c.stroke(); }
+}
+/* ---------- layout & scene ---------- */
+function layout() {
+  const sel = DISHES.filter(d => (S.qty[d.id] || 0) > 0);
+  const ring = sel.filter(d => d.kind === 'katori' || d.kind === 'pomegranate' || (d.sec === 'curry' && d.kind === 'mound'));
+  const rice = sel.filter(d => d.sec === 'rice');
+  const sweets = sel.filter(d => d.sec === 'sweet' && !ring.includes(d));
+  const salads = sel.filter(d => d.sec === 'salad' && !ring.includes(d));
+  return { ring, rice, sweets, salads };
+}
+function drawScene(c, W, H, opt = {}) {
+  const cx = W / 2, cy = H * 0.52, R = W * 0.33, leafP = S.plate === 'leaf';
+  drawTable(c, W, H, S.table);
+  if (S.touch.rangoli) drawRangoli(c, cx, cy, leafP ? R * 1.22 : R);
+  if (S.touch.marigold) scatterPetals(c, W, H, cx, cy, leafP ? R * 1.25 : R, ['#ff9a1a', '#ffc21a', '#ff7a10'], 70, 11);
+  if (S.touch.rose) scatterPetals(c, W, H, cx, cy, leafP ? R * 1.3 : R * 1.05, ['#d8203a', '#ff4a6a', '#a8102a'], 46, 23);
+  drawPlate(c, cx, cy, R, S.plate);
+  if (S.touch.jasmine) leafP ? drawGarland(c, cx, cy, R * 1.0, 1.42, 0.78) : drawGarland(c, cx, cy, R * 1.1);
+  const o = { ghee: !!S.touch.ghee, leaves: !!S.touch.leaves, vark: !!S.touch.vark, elephant: !!S.touch.elephant, katoriMetal: S.plate === 'brass' ? 'brass' : S.plate === 'leaf' ? 'steel' : 'silver' };
+  const sx = leafP ? 1.2 : 1, sy = leafP ? 0.78 : 1;
+  const P = (ux, uy) => [cx + ux * R * sx, cy + uy * R * sy];
+  const L = layout();
+  // sides
+  if (S.sides.papad) { const [x, y] = P(0.35, -0.27); drawSide(c, 'papad', x, y, R * 0.13); }
+  [['pickle', -0.34, -0.28], ['salt', -0.13, -0.34], ['chutney', 0.1, -0.34]].forEach(([id, ux, uy]) => { if (S.sides[id]) { const [x, y] = P(ux, uy); drawSide(c, id, x, y, R * 0.13); } });
+  if (opt.ghost) ghosts(c, P, R);
+  // ring of katoris across the top
+  const nR = L.ring.length, span = Math.min(Math.PI, Math.max(0, nR - 1) * 0.5), step = nR > 1 ? span / (nR - 1) : 0;
+  L.ring.forEach((d, i) => { const ang = -Math.PI / 2 - span / 2 + i * step; const [x, y] = P(Math.cos(ang) * 0.72, Math.sin(ang) * 0.72); const q = S.qty[d.id]; const r = R * (0.15 + Math.min(4, q) * 0.008); if (d.kind === 'mound') drawMound(c, x, y, r * 0.95, d, o); else drawKatori(c, x, y, r, d, o); if (q > 1 && d.kind !== 'mound') badge(c, x + r * 0.75, y - r * 0.75, '×' + q, R); });
+  // rice cluster in the centre
+  const RP = [[0, 0.16], [-0.24, 0.3], [0.24, 0.3], [0, 0.46]];
+  [...L.rice].sort((a, b) => S.qty[a.id] - S.qty[b.id]).reverse().forEach((d, i) => { const [x, y] = P(...RP[i]); const q = S.qty[d.id]; drawMound(c, x, y, R * (0.1 + Math.sqrt(q) * 0.075), d, o); });
+  // sweets lower-left, salad & fruit lower-right
+  const SP = [[-0.52, 0.26], [-0.36, 0.6], [-0.66, 0.5], [-0.46, -0.02], [-0.14, 0.74]];
+  L.sweets.forEach((d, i) => { const [x, y] = P(...SP[i % SP.length]); pieces(c, d, x, y, R, o); });
+  const AP = [[0.52, 0.26], [0.36, 0.6], [0.66, 0.5], [0.46, -0.02], [0.14, 0.74]];
+  L.salads.forEach((d, i) => { const [x, y] = P(...AP[i % AP.length]); pieces(c, d, x, y, R, o); });
+  if (S.touch.diya) drawDiya(c, W * 0.12, H * 0.12, R * 0.16);
+  if (S.touch.tumbler) drawTumbler(c, W * 0.88, H * 0.13, R * 0.17);
+  if (S.touch.napkin) drawNapkin(c, W * 0.86, H * 0.88, R * 0.22);
+  if (!opt.noSeal && ruleOK()) drawSeal(c, W * 0.12, H * 0.88, R * 0.16);
+}
+function badge(c, x, y, t, R) { c.save(); c.fillStyle = 'rgba(40,14,22,.9)'; c.strokeStyle = '#e2b95a'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, R * 0.055, 0, 7); c.fill(); c.stroke(); c.fillStyle = '#ffe9b0'; c.font = `800 ${R * 0.05}px 'DM Sans', sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(t, x, y + 1); c.restore(); }
+function pieces(c, d, x, y, R, o) {
+  const q = S.qty[d.id];
+  if (d.kind === 'mound') { drawMound(c, x, y, R * (0.09 + Math.sqrt(q) * 0.055), d, o); return; }
+  const pts = []; const s = R * (d.kind === 'cucumber' ? 0.08 : d.kind === 'banana' ? 0.05 : 0.105);
+  for (let i = 0; i < q; i++) { const a = i * 2.4, rr = Math.sqrt(i) * s * 0.8; pts.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.85]); }
+  pts.forEach(([px, py], i) => {
+    if (d.kind === 'mpak') drawMpak(c, px, py, R * 0.115, o);
+    if (d.kind === 'laddu') drawLaddu(c, px, py, R * 0.09, o);
+    if (d.kind === 'jalebi') drawJalebi(c, px, py, R * 0.09);
+    if (d.kind === 'chiroti') drawChiroti(c, px, py, R * 0.09);
+    if (d.kind === 'holige') drawHolige(c, px, py, R * 0.12);
+    if (d.kind === 'banana') drawBanana(c, x + (i - (q - 1) / 2) * R * 0.03, y + (i - (q - 1) / 2) * R * 0.07, R * 0.22, -0.5 + i * 0.12);
+    if (d.kind === 'mango') drawMango(c, px, py, R * 0.16, i * 0.9);
+    if (d.kind === 'cucumber') drawCucumber(c, px, py, R * 0.065);
+  });
+}
+function ghosts(c, P, R) {
+  const Z = { rice: [[0, 0.3], 0.3, 0.26], curry: [[0, -0.66], 0.62, 0.15], salad: [[0.52, 0.42], 0.24, 0.24], sweet: [[-0.52, 0.42], 0.24, 0.24] };
+  const sx = S.plate === 'leaf' ? 1.2 : 1, sy = S.plate === 'leaf' ? 0.78 : 1;
+  SECTIONS.forEach(sec => { if (secGrams(sec.id)) return; const [[ux, uy], rx, ry] = Z[sec.id]; const [x, y] = P(ux, uy);
+    c.save(); c.setLineDash([R * 0.035, R * 0.025]); c.lineWidth = R * 0.012; c.strokeStyle = 'rgba(255,248,225,.75)'; c.fillStyle = 'rgba(255,248,225,.10)';
+    c.beginPath(); c.ellipse(x, y, rx * R * sx, ry * R * sy, 0, 0, 7); c.fill(); c.stroke(); c.setLineDash([]);
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = R * 0.02; c.fillStyle = '#fff8e6';
+    c.font = `800 ${R * 0.05}px 'DM Sans', sans-serif`; c.fillText(sec.name.toUpperCase(), x, y - R * 0.03);
+    c.font = `700 ${R * 0.06}px 'DM Sans', sans-serif`; c.fillStyle = '#ffe08a'; c.fillText(sec.target + ' g', x, y + R * 0.045); c.restore(); });
+}
+function drawSeal(c, x, y, r) {
+  c.save(); softShadow(c, x + r * 0.08, y + r * 0.15, r * 1.3, r * 1.1, 0.5);
+  c.fillStyle = '#9a1424'; c.beginPath(); for (let i = 0; i <= 32; i++) { const a = i / 32 * 6.283, w = r * (1 + 0.06 * Math.sin(a * 9)); i ? c.lineTo(x + Math.cos(a) * w, y + Math.sin(a) * w) : c.moveTo(x + Math.cos(a) * w, y + Math.sin(a) * w); } c.fill();
+  const g = c.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); g.addColorStop(0, '#d8303e'); g.addColorStop(1, '#7a0a18'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r * 0.82, 0, 7); c.fill();
+  c.strokeStyle = '#f2c868'; c.lineWidth = r * 0.04; c.beginPath(); c.arc(x, y, r * 0.7, 0, 7); c.stroke();
+  c.fillStyle = '#f6d48a'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `700 ${r * 0.5}px Cinzel, serif`; c.fillText('♛', x, y - r * 0.12); c.font = `800 ${r * 0.17}px 'DM Sans', sans-serif`; c.fillText('15 : 9 : 10 : 6', x, y + r * 0.32);
+  c.restore();
+}
+
+/* ======================= UI ======================= */
+const cv = $('cv'), cx = cv.getContext('2d');
+let raf = 0; function render() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { drawScene(cx, cv.width, cv.height, { ghost: true }); renderRule(); renderHud(); save(); }); }
+function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toast.tm); toast.tm = setTimeout(() => e.classList.remove('show'), 2200); }
+function renderHud() { $('tTitle').textContent = title(); $('tEarn').textContent = S.coins; $('tSpent').textContent = '₹' + spent(); $('tLeft').textContent = left(); $('stageName').textContent = S.name ? `${S.name}'s Thali` : "The King's Thali"; }
+const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+function renderRule() {
+  const tot = total(), maxW = Math.max(800, tot);
+  $('bar').innerHTML = SECTIONS.map(s => { const g = secGrams(s.id); return `<div style="width:${g / maxW * 100}%;background:${s.color}">${g ? g + ' g' : ''}</div>`; }).join('') + [300, 480, 680].map(v => `<span class="tick" style="left:${v / maxW * 100}%"></span>`).join('');
+  $('rows').innerHTML = SECTIONS.map(s => { const g = secGrams(s.id), ok = g === s.target; const pct = tot ? Math.round(g / tot * 1000) / 10 : 0; return `<div class="rw ${ok ? 'ok' : g ? 'bad' : ''}"><div class="n"><i style="background:${s.color}"></i>${s.name}</div><div class="g">${g} g <small>/ ${s.target} g</small></div><div class="s">${ok ? '✓ Perfect' : g < s.target ? `Add ${s.target - g} g` : `Remove ${g - s.target} g`} · ${pct}%</div></div>`; }).join('');
+  const gs = SECTIONS.map(s => secGrams(s.id));
+  let line = `Total <b>${tot} g</b> of 800 g. `;
+  if (gs.every(x => x > 0)) { const k = gs.reduce(gcd); line += `Your ratio: <b>${gs.join(' : ')}</b> = <b>${gs.map(x => x / k).join(' : ')}</b>.`; }
+  if (ruleOK()) line = `♛ <b>Raja Guru’s Rule met!</b> 300 : 180 : 200 : 120 = <b>15 : 9 : 10 : 6</b> · that's <b>37.5% · 22.5% · 25% · 15%</b>. The Maharaja's Seal is yours!`;
+  $('ratioLine').innerHTML = line;
+}
+/* option cards with mini canvases */
+function miniScene(canvas, fn) { const c = canvas.getContext('2d'); c.clearRect(0, 0, canvas.width, canvas.height); fn(c, canvas.width, canvas.height); }
+function optCard(o, sel, onPick, drawFn) {
+  const b = document.createElement('button'); b.className = 'opt' + (sel ? ' on' : '');
+  const can = document.createElement('canvas'); can.width = 240; can.height = 240; b.appendChild(can);
+  const need = !sel && o.cost > left();
+  b.insertAdjacentHTML('beforeend', `<div class="nm">${o.name}</div><div class="pr ${o.cost ? '' : 'free'}">${o.cost ? '₹' + o.cost : 'Free'}</div>${need ? `<div class="need">Need ₹${o.cost - left()} more</div>` : ''}`);
+  if (need) b.classList.add('locked');
+  miniScene(can, drawFn); b.onclick = () => onPick(o); return b;
+}
+function renderPlates() {
+  const el = $('plates'); el.innerHTML = '';
+  PLATES.forEach(p => el.appendChild(optCard(p, S.plate === p.id, o => { const cur = PLATES.find(x => x.id === S.plate).cost; if (o.cost - cur > left()) { toast(`Not enough coins — you need ₹${o.cost - cur - left()} more`); return; } S.plate = o.id; renderAll(); }, (c, W, H) => { drawTable(c, W, H, S.table); drawPlate(c, W / 2, H / 2, W * (p.id === 'leaf' ? 0.3 : 0.38), p.id); })));
+  const t = $('tables'); t.innerHTML = '';
+  TABLES.forEach(p => t.appendChild(optCard(p, S.table === p.id, o => { const cur = TABLES.find(x => x.id === S.table).cost; if (o.cost - cur > left()) { toast(`Not enough coins — you need ₹${o.cost - cur - left()} more`); return; } S.table = o.id; renderAll(); }, (c, W, H) => drawTable(c, W, H, p.id))));
+}
+function dishIcon(c, W, H, d) {
+  const g = c.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * 0.7); g.addColorStop(0, '#3a1e28'); g.addColorStop(1, '#1e0e14'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.fillStyle = metalGrad(c, W / 2, H / 2, W * 0.42, 'silver'); c.beginPath(); c.arc(W / 2, H / 2, W * 0.42, 0, 7); c.fill(); c.fillStyle = metalGrad(c, W / 2, H / 2, W * 0.36, 'steel'); c.beginPath(); c.arc(W / 2, H / 2, W * 0.36, 0, 7); c.fill();
+  const o = { katoriMetal: 'brass', leaves: true }; const R = W * 0.9;
+  if (d.kind === 'mound') drawMound(c, W / 2, H / 2, W * 0.26, d, o);
+  else if (d.kind === 'katori' || d.kind === 'pomegranate') drawKatori(c, W / 2, H / 2, W * 0.27, d, o);
+  else { const save = S.qty[d.id]; S.qty[d.id] = d.kind === 'banana' || d.kind === 'holige' ? 1 : d.kind === 'cucumber' || d.kind === 'mango' ? 3 : 2; pieces(c, d, W / 2, H / 2, W * 1.5, o); S.qty[d.id] = save; }
+}
+function renderServe() {
+  const el = $('secs'); el.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const g = secGrams(s.id), cls = g === s.target ? 'ok' : g > s.target ? 'over' : '';
+    const box = document.createElement('div'); box.className = 'sec';
+    box.innerHTML = `<div class="sh"><i style="background:${s.color}"></i><b>${s.name}</b><small style="color:#cdbba0;font-size:12px">${s.tag}</small><span class="${cls}">${g} / ${s.target} g</span></div><div class="dl"></div>`;
+    const dl = box.querySelector('.dl');
+    DISHES.filter(d => d.sec === s.id).forEach(d => {
+      const q = S.qty[d.id] || 0; const card = document.createElement('div'); card.className = 'dish' + (q ? ' has' : '');
+      const can = document.createElement('canvas'); can.width = 200; can.height = 200; card.appendChild(can);
+      card.insertAdjacentHTML('beforeend', `${d.today ? '<span class="today">COOKED TODAY</span>' : ''}<div class="nm">${d.name}</div><div class="u">1 ${d.unit} = ${d.g} g</div><div class="step"><button data-a="-">−</button><div class="q">${q}<small>${q * d.g} g</small></div><button data-a="+">+</button></div>`);
+      miniScene(can, (c, W, H) => dishIcon(c, W, H, d));
+      card.querySelector('[data-a="-"]').onclick = () => { if (!q) return; S.qty[d.id] = q - 1; renderServe(); render(); };
+      card.querySelector('[data-a="+"]').onclick = () => { if (secGrams(s.id) + d.g > s.target + 120) { toast(`That's too much ${s.name.toLowerCase()} — the rule says ${s.target} g`); return; } if (q >= 8) return; const distinct = DISHES.filter(x => x.sec === s.id && S.qty[x.id]).length; if (!q && distinct >= (s.id === 'rice' ? 4 : 5)) { toast('The plate is full here — remove a dish first'); return; } S.qty[d.id] = q + 1; renderServe(); render(); if (secGrams(s.id) === s.target) toast(`✓ ${s.name}: exactly ${s.target} g!`); };
+      dl.appendChild(card);
+    });
+    el.appendChild(box);
+  });
+  const sd = $('sides'); sd.innerHTML = '';
+  SIDES.forEach(x => { const b = document.createElement('button'); b.className = 'chip' + (S.sides[x.id] ? ' on' : ''); b.textContent = x.name; b.onclick = () => { S.sides[x.id] = !S.sides[x.id]; renderServe(); render(); }; sd.appendChild(b); });
+}
+function renderTouches() {
+  const el = $('touches'); el.innerHTML = '';
+  TOUCHES.forEach(t => el.appendChild(optCard(t, !!S.touch[t.id], o => { if (S.touch[o.id]) { S.touch[o.id] = false; } else { if (o.cost > left()) { toast(`Not enough coins — you need ₹${o.cost - left()} more`); return; } S.touch[o.id] = true; } renderAll(); }, (c, W, H) => touchIcon(c, W, H, t.id))));
+}
+function touchIcon(c, W, H, id) {
+  drawTable(c, W, H, S.table); const cx2 = W / 2, cy2 = H / 2, R = W * 0.28;
+  if (['jasmine', 'rangoli', 'marigold', 'rose', 'elephant', 'leaves', 'ghee', 'vark'].includes(id)) {
+    if (id === 'rangoli') drawRangoli(c, cx2, cy2, R * 1.0);
+    if (id === 'marigold') scatterPetals(c, W, H, cx2, cy2, R * 0.9, ['#ff9a1a', '#ffc21a', '#ff7a10'], 40, 3);
+    if (id === 'rose') scatterPetals(c, W, H, cx2, cy2, R * 0.9, ['#d8203a', '#ff4a6a', '#a8102a'], 34, 5);
+    drawPlate(c, cx2, cy2, R, 'silver');
+    if (id === 'jasmine') drawGarland(c, cx2, cy2, R * 1.1);
+    const o = { katoriMetal: 'silver', leaves: id === 'leaves', ghee: id === 'ghee', vark: id === 'vark', elephant: id === 'elephant' };
+    if (id === 'elephant') drawKatori(c, cx2, cy2, R * 0.5, DISHES.find(d => d.id === 'saaru'), o);
+    else if (id === 'vark') { drawMpak(c, cx2 - R * 0.25, cy2, R * 0.38, o); drawLaddu(c, cx2 + R * 0.28, cy2, R * 0.26, o); }
+    else if (id === 'leaves' || id === 'ghee') drawMound(c, cx2, cy2, R * 0.5, DISHES.find(d => d.id === 'bbb'), o);
+  }
+  if (id === 'diya') drawDiya(c, cx2, cy2 + R * 0.2, R * 0.6);
+  if (id === 'tumbler') drawTumbler(c, cx2, cy2, R * 0.6);
+  if (id === 'napkin') drawNapkin(c, cx2, cy2 + R * 0.1, R * 0.8);
+}
+/* royal card */
+function buildCard(canvas) {
+  const W = canvas.width, H = canvas.height, c = canvas.getContext('2d');
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#4a1424'); g.addColorStop(1, '#1a0810'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.strokeStyle = 'rgba(226,185,90,.12)'; c.lineWidth = 2; for (let y = 60; y < H; y += 110) for (let x = 60 + ((y / 110) % 2) * 55; x < W; x += 110) { c.beginPath(); c.moveTo(x, y - 24); c.quadraticCurveTo(x + 24, y, x, y + 24); c.quadraticCurveTo(x - 24, y, x, y - 24); c.stroke(); }
+  c.strokeStyle = '#e2b95a'; c.lineWidth = 6; c.strokeRect(28, 28, W - 56, H - 56); c.lineWidth = 2; c.strokeRect(44, 44, W - 88, H - 88);
+  c.textAlign = 'center'; c.fillStyle = '#f6d892'; c.font = `700 26px Cinzel, serif`; c.fillText('LENKA ACADEMY · THE GREAT DASARA LAB 2026', W / 2, 108);
+  c.fillStyle = '#fbf3e2'; c.font = `700 74px Cinzel, serif`; c.fillText("THE KING'S THALI", W / 2, 192);
+  c.font = `600 34px 'DM Sans', sans-serif`; c.fillStyle = '#e8dcc4'; c.fillText(`served by ${S.name || 'Royal Apprentice'}`, W / 2, 246);
+  const tb = title(); c.font = `800 30px 'DM Sans', sans-serif`; const tw = c.measureText('♛  ' + tb.toUpperCase()).width + 60; const tg = c.createLinearGradient(W / 2 - tw / 2, 0, W / 2 + tw / 2, 0); tg.addColorStop(0, '#c99a3a'); tg.addColorStop(1, '#f8dea0'); c.fillStyle = tg; c.beginPath(); c.roundRect(W / 2 - tw / 2, 272, tw, 56, 28); c.fill(); c.fillStyle = '#2a1408'; c.fillText('♛  ' + tb.toUpperCase(), W / 2, 311);
+  const off = document.createElement('canvas'); off.width = 900; off.height = 900; drawScene(off.getContext('2d'), 900, 900, { noSeal: true });
+  c.save(); c.beginPath(); c.roundRect(90, 360, 900, 760, 30); c.clip(); c.drawImage(off, 0, 70, 900, 760, 90, 360, 900, 760); c.restore(); c.strokeStyle = '#e2b95a'; c.lineWidth = 4; c.beginPath(); c.roundRect(90, 360, 900, 760, 30); c.stroke();
+  if (ruleOK()) drawSeal(c, 900, 1090, 92);
+  // ratio bar
+  const tot = Math.max(1, total()); let x = 110; const bw = W - 220, by = 1170;
+  c.font = `800 22px 'DM Sans', sans-serif`;
+  SECTIONS.forEach(s => { const gm = secGrams(s.id), w = bw * gm / Math.max(800, tot); c.fillStyle = s.color; c.fillRect(x, by, w, 44); if (w > 70) { c.fillStyle = '#1a0d14'; c.fillText(`${gm} g`, x + w / 2, by + 30); } x += w; });
+  c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = 2; c.strokeRect(110, by, bw, 44);
+  SECTIONS.forEach((s, i) => { const gm = secGrams(s.id), cxx = 110 + bw * (i + 0.5) / 4; c.fillStyle = s.color; c.font = `800 22px 'DM Sans', sans-serif`; c.fillText(s.name.toUpperCase(), cxx, by + 90); c.fillStyle = '#fbf3e2'; c.font = `800 34px 'DM Sans', sans-serif`; c.fillText(`${total() ? Math.round(gm / total() * 1000) / 10 : 0}%`, cxx, by + 132); });
+  c.font = `600 28px 'DM Sans', sans-serif`; c.fillStyle = ruleOK() ? '#a8f0bb' : '#ffc0a8';
+  c.fillText(ruleOK() ? '✓ Raja Guru’s Rule met — 15 : 9 : 10 : 6 on an 800 g thali' : `Raja Guru’s Rule not met yet — total ${total()} g`, W / 2, by + 190);
+  c.fillStyle = '#cdbba0'; c.font = `600 24px 'DM Sans', sans-serif`; c.fillText(`Royal coins earned ₹${S.coins}  ·  spent ₹${spent()}  ·  ${PLATES.find(p => p.id === S.plate).name}`, W / 2, by + 226);
+  c.fillStyle = '#f6d892'; c.font = `700 22px Cinzel, serif`; c.fillText('THE ROYAL KITCHEN OF MYSORE PALACE · DAY 2 · CLASSES 8–9', W / 2, H - 62);
+}
+function renderCard() { buildCard($('cardPrev')); $('cardMsg').innerHTML = ruleOK() ? '♛ <b>Perfect!</b> Your thali follows Raja Guru’s Rule — your card carries the Maharaja\'s Seal.' : `Your card is ready, but the <b>Raja Guru’s Rule</b> isn't met yet. Go to <b>Serve</b> and make it <b>300 g · 180 g · 200 g · 120 g</b> to earn the Seal.`; }
+$('dl').onclick = () => { const can = $('cardPrev'); buildCard(can); can.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Kings-Thali-${(S.name || 'Royal').replace(/[^a-z0-9]+/gi, '-')}.png`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); toast('Card downloaded — post it in the class group!'); }, 'image/png'); };
+$('reset').onclick = () => { if (!confirmReset()) return; S.qty = {}; S.plate = 'leaf'; S.table = 'teak'; S.touch = { leaves: true }; S.sides = { pickle: true, salt: true }; renderAll(); showTab('plate'); };
+function confirmReset() { if (confirmReset.armed) { confirmReset.armed = false; return true; } confirmReset.armed = true; toast('Tap "Start again" once more to clear your thali'); setTimeout(() => (confirmReset.armed = false), 3000); return false; }
+function showTab(t) { document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.id === 't-' + t)); if (t === 'card') renderCard(); }
+document.querySelectorAll('#tabs button').forEach(b => (b.onclick = () => showTab(b.dataset.t)));
+function renderAll() { renderPlates(); renderServe(); renderTouches(); render(); if (document.querySelector('#t-card.on')) renderCard(); }
+/* welcome */
+$('wGo').onclick = () => {
+  const n = $('inName').value.trim(), cRaw = $('inCoins').value; const c = Math.round(Number(cRaw));
+  if (!n) { $('wErr').textContent = 'Please type your name.'; return; }
+  if (cRaw === '' || isNaN(c) || c < 0) { $('wErr').textContent = 'Type the royal coins you earned (0 to 640).'; return; }
+  if (c > 640) { $('wErr').textContent = 'The most coins in the Royal Kitchen is ₹640.'; return; }
+  S.name = n; S.coins = c; while (spent() > S.coins) { const t = TOUCHES.filter(x => S.touch[x.id] && x.cost).pop(); if (t) S.touch[t.id] = false; else if (S.table !== 'teak') S.table = 'teak'; else S.plate = 'leaf'; }
+  $('welcome').classList.add('gone'); renderAll(); toast(`Welcome, ${title()} ${n}! You have ₹${c} to spend.`);
+};
+$('inCoins').addEventListener('keydown', e => { if (e.key === 'Enter') $('wGo').click(); });
+load(); if (S.name) { $('inName').value = S.name; $('inCoins').value = S.coins; $('wGo').textContent = 'Continue my thali ▸'; }
+(async () => { try { await Promise.race([Promise.all([document.fonts.load("700 40px Cinzel"), document.fonts.load("800 30px 'DM Sans'")]), new Promise(r => setTimeout(r, 2500))]); } catch (e) { } renderAll(); })();
+</script>
+</body>
+</html>
