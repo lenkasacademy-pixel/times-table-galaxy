@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Game Night">
+<meta name="theme-color" content="#0f1036">
+<title>Game Night — party games for one iPad</title>
+<meta name="description" content="Six party games for 3–4 players on one iPad: Dimaag Milao, So Clover!, Smart10, Cross Clues, Things in Rings and Love Letter.">
+<link rel="apple-touch-icon" href="dimaag-milao/icon.png">
+<link rel="icon" type="image/png" href="dimaag-milao/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Rozha+One&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0f1036;--ivory:#fff4e0;--muted:#cbc2ea;--line:rgba(255,244,224,.14);
+  --fd:'Rozha One',Georgia,serif;--fu:'Baloo 2','Trebuchet MS',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fu);color:var(--ivory);background:var(--night);min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus-visible{outline:3px solid #ffd36b;outline-offset:4px;border-radius:18px}
+.aura{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:radial-gradient(120% 70% at 50% -10%,#2b1468 0%,transparent 62%),radial-gradient(90% 60% at 50% 115%,#07324d 0%,transparent 62%),var(--night)}
+.aura i{position:absolute;border-radius:50%;filter:blur(90px);animation:drift 28s ease-in-out infinite alternate}
+.aura i:nth-child(1){width:46vw;height:46vw;background:#ff2d78;left:-14vw;top:-16vw;opacity:.28}
+.aura i:nth-child(2){width:38vw;height:38vw;background:#ffb000;right:-12vw;top:12vh;opacity:.18;animation-duration:34s}
+.aura i:nth-child(3){width:52vw;height:52vw;background:#00c2a8;left:24vw;bottom:-34vw;opacity:.18;animation-duration:40s}
+@keyframes drift{to{transform:translate(6vw,5vh) scale(1.15)}}
+main{position:relative;z-index:1;max-width:1180px;margin:0 auto;
+  padding:calc(40px + env(safe-area-inset-top)) calc(22px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(22px + env(safe-area-inset-left))}
+header{text-align:center;margin-bottom:34px}
+h1{font-family:var(--fd);font-weight:400;font-size:clamp(60px,10vw,128px);line-height:.9;
+  background:linear-gradient(180deg,#fff3c4 0%,#ffd36b 38%,#ff9a1f 70%,#ff2d78 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 0 rgba(60,8,40,.55));padding-bottom:6px}
+.tag{font-size:clamp(17px,2vw,21px);color:var(--muted);margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.game{position:relative;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;padding:20px;border-radius:26px;
+  background:linear-gradient(160deg,rgba(255,244,224,.07),rgba(255,244,224,.02));border:2px solid var(--line);
+  box-shadow:0 24px 50px -30px rgba(0,0,0,.7);transition:transform .15s,border-color .2s}
+.game:active{transform:scale(.98)}
+@media(hover:hover){.game:hover{transform:translateY(-3px);border-color:var(--c)}}
+.game .em{grid-row:1/3;width:76px;height:76px;border-radius:24px;display:grid;place-items:center;font-size:42px;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 60%),var(--c);box-shadow:0 0 30px -8px var(--c)}
+.game h2{font-family:var(--fd);font-weight:400;font-size:30px;line-height:1.05}
+.game .meta{font-size:14px;color:var(--muted);font-weight:600}
+.game p{grid-column:1/3;margin-top:12px;font-size:16px;line-height:1.45;color:#efe7ff}
+.game .go{grid-column:1/3;margin-top:14px;justify-self:start;font-weight:800;font-size:17px;padding:9px 18px;border-radius:14px;color:#2b0a1e;
+  background:linear-gradient(180deg,#ffd877,#ffb000 55%,#ff8a00);box-shadow:0 4px 0 #a3480a}
+.game.new::after{content:'New';position:absolute;top:16px;right:16px;font-size:13px;font-weight:800;padding:3px 10px;border-radius:99px;background:#ff2d78;color:#fff}
+.tip{margin-top:30px;text-align:center;color:var(--muted);font-size:15px;line-height:1.5}
+.tip b{color:var(--ivory)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aura"><i></i><i></i><i></i></div>
+<main>
+  <header>
+    <h1>Game Night</h1>
+    <p class="tag">Six party games for 3–4 players, all on one iPad.</p>
+  </header>
+  <div class="grid">
+    <a class="game" href="dimaag-milao/" style="--c:#ff4f8f">
+      <span class="em">📻</span><h2>Dimaag Milao</h2><span class="meta">2–4 teams · 30 min</span>
+      <p>One clue, one dial. The Psychic gives a clue and the team moves the needle to the hidden target.</p>
+      <span class="go">Play</span>
+    </a>
+    <a class="game new" href="so-clover/" style="--c:#3fe8cf">
+      <span class="em">🍀</span><h2>So Clover!</h2><span class="meta">3–6 players · best 3–4 · team game</span>
+      <p>Each player writes four secret clues on a clover. The table rebuilds it together by matching word cards to the clues.</p>
+      <span class="go">Play</span>
+    </a>
+    <a class="game new" href="smart10/" style="--c:#ffc23a">
+      <span class="em">🔟</span><h2>Smart10</h2><span class="meta">2–8 players · best 3–4</span>
+      <p>Ten answers around one question. Answer one to keep going, or pass and bank your points. One wrong answer and you lose that round's points.</p>
+      <span class="go">Play</span>
+    </a>
+    <a class="game new" href="cross-clues/" style="--c:#5b95ff">
+      <span class="em">✖️</span><h2>Cross Clues</h2><span class="meta">2–6 players · best 4 · team game</span>
+      <p>A grid of words. Peek at a secret square, give one word that links its row and column, and see if the team finds it.</p>
+      <span class="go">Play</span>
+    </a>
+    <a class="game new" href="things-in-rings/" style="--c:#ff8a5c">
+      <span class="em">⭕</span><h2>Things in Rings</h2><span class="meta">2–6 players · best 4</span>
+      <p>Three rings, three secret rules. Place things in the rings, learn from every mistake, and crack all three rules first. Includes a numbers mode for maths class.</p>
+      <span class="go">Play</span>
+    </a>
+    <a class="game new" href="love-letter/" style="--c:#a99bff">
+      <span class="em">💌</span><h2>Love Letter</h2><span class="meta">2–4 players · best 4</span>
+      <p>Sixteen cards, one palace. Pass the iPad, bluff, deduce, and get your letter to the Princess.</p>
+      <span class="go">Play</span>
+    </a>
+  </div>
+  <p class="tip">On iPad, open this page in Safari, tap <b>Share</b>, then <b>Add to Home Screen</b>. Game Night will open full-screen like an app.</p>
+</main>
+</body>
+</html>
